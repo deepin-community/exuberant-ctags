@@ -1,0 +1,2 @@
+version=3
+opts=dversionmangle=s/^\d+:// https://sf.net/ctags/ctags-(.+)\.tar\.gz

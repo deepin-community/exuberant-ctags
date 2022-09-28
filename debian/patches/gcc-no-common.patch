@@ -1,0 +1,88 @@
+From ed1d00e4c005ecc20f298630cce7635d88f5b669 Mon Sep 17 00:00:00 2001
+From: Colin Watson <cjwatson@debian.org>
+Date: Fri, 17 Apr 2020 20:24:30 +0100
+Subject: Fix build with gcc -fno-common
+
+Bug-Debian: https://bugs.debian.org/957185
+Forwarded: no
+Last-Update: 2020-04-17
+
+Patch-Name: gcc-no-common.patch
+---
+ objc.c  |  6 +++---
+ ocaml.c | 16 ++++++++--------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/objc.c b/objc.c
+index 2a5de58..a5811ec 100644
+--- a/objc.c
++++ b/objc.c
+@@ -432,16 +432,16 @@ typedef void (*parseNext) (vString * const ident, objcToken what);
+ /********** Helpers */
+ /* This variable hold the 'parser' which is going to
+  * handle the next token */
+-parseNext toDoNext;
++static parseNext toDoNext;
+ 
+ /* Special variable used by parser eater to
+  * determine which action to put after their
+  * job is finished. */
+-parseNext comeAfter;
++static parseNext comeAfter;
+ 
+ /* Used by some parsers detecting certain token
+  * to revert to previous parser. */
+-parseNext fallback;
++static parseNext fallback;
+ 
+ 
+ /********** Grammar */
+diff --git a/ocaml.c b/ocaml.c
+index 104a777..235862f 100644
+--- a/ocaml.c
++++ b/ocaml.c
+@@ -514,26 +514,26 @@ typedef void (*parseNext) (vString * const ident, ocaToken what);
+ /********** Helpers */
+ /* This variable hold the 'parser' which is going to
+  * handle the next token */
+-parseNext toDoNext;
++static parseNext toDoNext;
+ 
+ /* Special variable used by parser eater to
+  * determine which action to put after their
+  * job is finished. */
+-parseNext comeAfter;
++static parseNext comeAfter;
+ 
+ /* If a token put an end to current delcaration/
+  * statement */
+-ocaToken terminatingToken;
++static ocaToken terminatingToken;
+ 
+ /* Token to be searched by the different
+  * parser eater. */
+-ocaToken waitedToken;
++static ocaToken waitedToken;
+ 
+ /* name of the last class, used for
+  * context stacking. */
+-vString *lastClass;
++static vString *lastClass;
+ 
+-vString *voidName;
++static vString *voidName;
+ 
+ typedef enum _sContextKind {
+ 	ContextStrong,
+@@ -559,9 +559,9 @@ typedef struct _sOcamlContext {
+ 
+ /* context stack, can be used to output scope information
+  * into the tag file. */
+-ocamlContext stack[OCAML_MAX_STACK_SIZE];
++static ocamlContext stack[OCAML_MAX_STACK_SIZE];
+ /* current position in the tag */
+-int stackIndex;
++static int stackIndex;
+ 
+ /* special function, often recalled, so putting it here */
+ static void globalScope (vString * const ident, ocaToken what);
